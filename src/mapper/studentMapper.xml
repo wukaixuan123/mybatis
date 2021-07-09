@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 如果需要访问这条sql语，需要通过其唯一标识访问到 唯一标识就是 namespace+id的组合 -->
+<mapper namespace="mapper.studentMapper">
+    <!-- mapper标签下有select、update、delete、insert，根据你要执行的sql语句选择正确的标签 -->
+    <select id="queryById" parameterType="int" resultType="com.dao.student">
+        select *
+        from student
+    </select>
+    <insert id="addStudent" parameterType="com.dao.student">
+        insert into student(userName,sex)  values(#{userName},#{sex})
+    </insert>
+    <update id="updateStudent" parameterType="com.dao.student">
+        update student set userName = #{userName},sex = #{sex} where id = #{id}
+    </update>
+    <delete id="delStudent" parameterType="int">
+        delete  from student where id = #{id}
+    </delete>
+</mapper>
