@@ -37,4 +37,7 @@ public class student {
                 ", sex='" + sex + '\'' +
                 '}';
     }
+    public String toString(String  a){
+        return  "4";
+    }
 }
