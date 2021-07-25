@@ -1,4 +1,5 @@
 import com.dao.student;
+import mapper.studentMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -6,49 +7,65 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
 
 public class mains {
     public static void main(String[] args) {
-        Reader reader = null;
+//        queryStuNoByStuNO();
+//        updateStuParaHashMap();
+//        queryAllStuResultTypeMap();
+        queryAllToHashMapResultType();
+    }
+//    使用HashMap查询单个学生
+    public static void queryStuNoByStuNO(){
+       SqlSession session = getSession();
+        studentMapper studentMapper = session.getMapper(studentMapper.class);
+        HashMap<String,Object> stuMap = studentMapper.queryStuNoByStuNO(2);
+        System.out.println(stuMap);
+        session.close();
+    }
+    //结果为HashMap的集合
+    public static void queryAllStuResultTypeMap(){
+        SqlSession session = getSession();
+       studentMapper studentMapper =  session.getMapper(studentMapper.class);
+       List<HashMap<String,Object>> stuMaps = studentMapper.queryAllStuResultTypeMap();
+        for (HashMap<String, Object> stuMap : stuMaps) {
+            System.out.println(stuMap.toString());
+        }
+        session.close();
+    }
+//    输入参数为HashMap
+    public static void updateStuParaHashMap(){
+        SqlSession session = getSession();
+        studentMapper studentMapper =  session.getMapper(studentMapper.class);
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("userName","你好啊");
+        hashMap.put("sex","女");
+        hashMap.put("id",2);
+        studentMapper.updateStuParaHashMap(hashMap);
+        session.commit();
+        session.close();
+    }
+    private static SqlSession getSession() {
+        String configPath = "config.xml";
         try {
-           reader = Resources.getResourceAsReader("config.xml");
+            Reader reader =   Resources.getResourceAsReader(configPath);
+            SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(reader);
+            return  sessionFactory.openSession();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(reader,"development"); //第二个参数可选可手动配置 environment 对应的id
-        SqlSession session = sessionFactory.openSession();
-        String StatMent = "mapper.studentMapper.queryById";
-        List<student> list  = session.selectList(StatMent);
-        for (student student : list) {
+        return null;
+    }
+    //使用hashMap+resultType解决实体类属性与数据库列明不匹配的问题
+    public static void queryAllToHashMapResultType(){
+        SqlSession session = getSession();
+        studentMapper studentMapper =  session.getMapper(studentMapper.class);
+       List<student> stuJIhe = studentMapper.queryAllToHashMapResultType();
+        for (student student : stuJIhe) {
             System.out.println(student);
         }
-        student stu = new student();
-        stu.setUserName("月月");
-        stu.setSex("女");
-        String statment = "mapper.studentMapper.addStudent";
-        int row = session.insert(statment,stu);
-        if(row>0){
-            System.out.println("插入成功！");
-        }
-        //修改
-        String updateStatment = "mapper.studentMapper.updateStudent";
-        student student = new student();
-        //需要修改的学生编号
-        student.setId(6);
-        //修改后的值
-        student.setUserName("哈哈");
-        student.setSex("女");
-        session.update(updateStatment,student);
-        //提交事务
-        session.commit();
-        //删除
-        String delSql = "mapper.studentMapper.delStudent";
-        session.delete(delSql,1);
-        session.commit();
-        List<student> listt  = session.selectList(StatMent);
-        for (student sa : listt) {
-            System.out.println(sa);
-        }
+        session.close();
     }
 }

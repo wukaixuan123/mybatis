@@ -4,21 +4,34 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration><!-- 配置管理器 -->
+    <!--定义配置文件-->
+    <properties resource="jdbc.properties"/>
+    <!--全局变量-->
+<!--    <settings>-->
+<!--        <setting name="ches" value="true"/>-->
+<!--    </settings>-->
+    <typeAliases> <!--类型别名别名-->
+<!--        <typeAlias type="com.dao.student" alias="student"></typeAlias>-->
+        <package name="com.dao"/><!--包路径 给所有类定义别名 别名就是类名去掉了全类名-->
+    </typeAliases>
+    <typeHandlers>
+        <typeHandler handler="com.typeHandler.typeHandler" javaType="String" jdbcType="NUMERIC" />
+    </typeHandlers>
     <!-- 配置数据库连接信息 -->
     <environments default="development"><!--环境配置-->
         <environment id="development">  <!-- 环境变量-->
             <transactionManager type="JDBC"/> <!-- 事务管理-->
             <dataSource type="POOLED"><!--数据源类型  可选POOLED:第三方数据源 默认该配置即可,UNPOOLED:使用JDBC方式 比较消耗资源, jNDI 使用tomcat获取-->
-                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/mybaits"/>
-                <property name="username" value="root"/>
-                <property name="password" value="root"/>
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
             </dataSource>
         </environment>
     </environments>
     <!-- 映射文件定位 -->
     <!--这个就是说一下，要执行的sql语句的xml文件在哪，这里可以写相对路径也可以写绝对路径，绝对路径就是url，相对路径使用resource-->
     <mappers>  <!--映射设置-->
-        <mapper resource="mapper/studentMapper.xml"/>
+        <package name="mapper"/>
     </mappers>
 </configuration>

@@ -4,18 +4,43 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 如果需要访问这条sql语，需要通过其唯一标识访问到 唯一标识就是 namespace+id的组合 -->
 <mapper namespace="mapper.studentMapper">
+    <resultMap id="resultMapStu" type="student">
+        <id property="id" column="id"/>
+        <result column="username" property="user_Name"/>
+        <result column="sex" property="sexString"/>
+        <result column="sexBoolean" property="sexStr" typeHandler="com.typeHandler.typeHandler"/>
+    </resultMap>
     <!-- mapper标签下有select、update、delete、insert，根据你要执行的sql语句选择正确的标签 -->
-    <select id="queryById" parameterType="int" resultType="com.dao.student">
+    <select id="queryById" parameterType="int" resultMap="resultMapStu">
         select *
-        from student
+        from student where id = #{id}
     </select>
-    <insert id="addStudent" parameterType="com.dao.student">
-        insert into student(userName,sex)  values(#{userName},#{sex})
+    <insert id="addStudent" parameterType="student">
+        insert into student(userName,sex,sexboolean)  values(#{user_Name},#{sexString},#{sexStr,javaType=String,jdbcType=NUMERIC})
     </insert>
-    <update id="updateStudent" parameterType="com.dao.student">
+    <update id="updateStudent" parameterType="student">
         update student set userName = #{userName},sex = #{sex} where id = #{id}
     </update>
     <delete id="delStudent" parameterType="int">
         delete  from student where id = #{id}
     </delete>
+    <select id="queryAllStudent" resultMap="resultMapStu">
+        select * from student
+    </select>
+<!--输出参数为HashMap时-->
+    <select id="queryStuNoByStuNO" parameterType="int" resultType="HashMap">
+        select id "stuno",userName "name" from student where id = ${value}
+    </select>
+<!--    输出参数为HashMap的集合时-->
+    <select id="queryAllStuResultTypeMap" resultType="HashMap">
+        select id "StuNo",username "name" from student
+     </select>
+<!--    输入参数为HashMap时-->
+    <update id="updateStuParaHashMap" parameterType="HashMap">
+        update student set userName = #{userName},sex = #{sex} where id = #{id}
+    </update>
+<!--    使用resultMap+hashMap解决实体类queryAllToHashMapResultType属性名和数据库属性名不一致的问题-->
+    <select id="queryAllToHashMapResultType" resultType="student">
+        select id "id",username "user_Name",sex "sexString",sexBoolean "sexStr" from student
+    </select>
 </mapper>

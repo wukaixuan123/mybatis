@@ -2,9 +2,16 @@ package com.dao;
 
 public class student {
     private int id;
-    private String userName;
-    private String sex;
-
+    private String user_Name;
+    @Override
+    public String toString() {
+        return "student{" +
+                "id=" + id +
+                ", user_Name='" + user_Name + '\'' +
+                ", sexString='" + sexString + '\'' +
+                ", sexStr='" + sexStr + '\'' +
+                '}';
+    }
     public int getId() {
         return id;
     }
@@ -13,31 +20,31 @@ public class student {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUser_Name() {
+        return user_Name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUser_Name(String user_Name) {
+        this.user_Name = user_Name;
     }
 
-    public String getSex() {
-        return sex;
+    public String getSexString() {
+        return sexString;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setSexString(String sexString) {
+        this.sexString = sexString;
     }
 
-    @Override
-    public String toString() {
-        return "com.dao.student{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", sex='" + sex + '\'' +
-                '}';
+    public String getSexStr() {
+        return sexStr;
     }
-    public String toString(String  a){
-        return  "4";
+
+    public void setSexStr(String sexStr) {
+        this.sexStr = sexStr;
     }
+
+    private String sexString;
+    private String sexStr;
+
 }
